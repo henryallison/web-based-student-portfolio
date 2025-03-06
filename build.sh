@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Set the name of your Docker image
 IMAGE_NAME="my-streamlit-app"
 
