@@ -58,34 +58,42 @@ if page == "Home":
     st.title("🎓 Student Portfolio")
 
     # Profile image
-    uploaded_image = st.file_uploader("Upload Profile Picture", type=["jpg", "png"])
-    if uploaded_image is not None:
-        st.image(uploaded_image, width=150, caption="Uploaded image")
+    if "profile_image" in st.session_state and st.session_state.profile_image is not None:
+        st.image(st.session_state.profile_image, width=150, caption="Profile Picture")
     else:
-        st.image("profile.jpg", width=150, caption="Default image")
+        st.image("profile.jpg", width=150, caption="Default Image")
 
     # Student details (Editable!)
-    name = st.text_input("Name: ", "Henry Allison.")
-    location = st.text_input("Location: ", "Musanze, Rwanda")
-    field_of_study = st.text_input("Field of Study: ", "Computer Science, SWE")
-    university = st.text_input("University: ", "INES - Ruhengeri")
+    name = st.session_state.get("name", "Henry Allison")
+    location = st.session_state.get("location", "Musanze, Rwanda")
+    field_of_study = st.session_state.get("field_of_study", "Computer Science, SWE")
+    university = st.session_state.get("university", "INES - Ruhengeri")
 
-    st.write(f"📍 {location}")
-    st.write(f"📚 {field_of_study}")
-    st.write(f"🎓 {university}")
+    # Display user details
+    st.write(f"**👤 Name:** {name}")
+    st.write(f"**📍 Location:** {location}")
+    st.write(f"**📚 Field of Study:** {field_of_study}")
+    st.write(f"**🎓 University:** {university}")
 
     # Resume download button
-    with open("resume.pdf", "rb") as file:
+    cv_file = st.session_state.get("cv", "resume.pdf")
+    with open(cv_file, "rb") as file:
         resume_bytes = file.read()
-    st.download_button(label="📄 Download Resume", data=resume_bytes, file_name="resume.pdf", mime="application/pdf")
+    st.download_button(label="📄 Download Resume", data=resume_bytes, file_name=cv_file, mime="application/pdf")
 
     st.markdown("---")
     st.subheader("About Me")
-    about_me = st.text_area("Short introduction about myself:", "I'm currently a student at INES Ruhengeri. I am someone who is very hardworking and focus in life. I have "
-                "have a very good knowledge when it comes to software engineering. I also have a good programing knowledge"
-                                                                " in many programing language."
-            " I'm also a problem solver by default. I also follow good Software engineering practices at all time ")
+
+    # About me section
+    about_me = st.session_state.get("bio", (
+        "I'm currently a student at INES Ruhengeri. I am someone who is very hardworking and focused in life. "
+        "I have a very good knowledge when it comes to software engineering. I also have strong programming skills "
+        "in multiple programming languages. I'm a problem solver by default and always follow good software engineering practices."
+    ))
+
+    # Display the about me section
     st.write(about_me)
+
 
 # Projects section
 elif page == "Projects":
@@ -96,54 +104,50 @@ elif page == "Projects":
     project_filter = st.selectbox("Filter by:", ["All", "Year 1", "Year 2", "Year 3", "Dissertation"])
 
     if project_filter == "All" or project_filter == "Year 1":
-        with st.expander("📊 Simple Calculator"):
+        with st.expander("📊 Simple Calculator(individual Project)"):
             st.write("This project focuses on the creation of a simple calculator which can be use to perform addition, substation, multiplication, and division")
             st.write("**Technologies Used: C programing")
-            st.write("[🔗 GitHub Repo](https://github.com/henryallison/crop-disease-prediction)")
+            st.write("[🔗 GitHub Repo](https://github.com/henryallison/simple-calculator.git)")
 
-        with st.expander("📊 Mobile Money System"):
-            st.write("This system focuses on devloping of a system which simulates those activities that are conduct in a real world mobile money system")
+        with st.expander("📊 Mobile Money System (individual Project)"):
+            st.write("This project focuses on devloping of a system which simulates those activities that are conduct in a real world mobile money system")
             st.write("**Technologies Used: C programing")
-            st.write("[🔗 GitHub Repo](https://github.com/henryallison/crop-disease-prediction)")
-            st.write("📧 Email: hyallison5050@gmail.com")
-            st.write("[🔗 LinkedIn](https://www.linkedin.com/in/henry-allison-027545337/)")
+            st.write("[🔗 GitHub Repo](https://github.com/henryallison/mobile-money-System.git)")
+
 
     if project_filter == "All" or project_filter == "Year 2":
-        with st.expander("🏥 Employee Management System"):
-            st.write("This system focuses on devloping of a system which helps to manage employees data efficiently")
-            st.write("**Technologies Used:** Java")
-            st.write("[🔗 GitHub Repo](https://github.com/henryallison/hospital-management)")
-            st.write("📧 Email: hyallison5050@gmail.com")
-            st.write("[🔗 LinkedIn](https://www.linkedin.com/in/henry-allison-027545337/)")
+        with st.expander("🏥 Employee Management System (Group Project)"):
+            st.write("This project focuses on devloping of a system which helps to manage employees data efficiently")
+            st.write("**Technologies Used:** Python")
+            st.write("[🔗 GitHub Repo](https://github.com/henryallison/employee-management-sys.git)")
 
 
-        with st.expander("🏥 Web based hospital management System"):
-            st.write("This system focuses on devloping of a system which helps to manage patients, an doctors day to day data efficiently")
-            st.write("**Technologies Used:** html, css, java, javascript, SQL")
-            st.write("[🔗 GitHub Repo](https://github.com/henryallison/hospital-management)")
-            st.write("📧 Email: hyallison5050@gmail.com")
-            st.write("[🔗 LinkedIn](https://www.linkedin.com/in/henry-allison-027545337/)")
+
+        with st.expander("🏥 hospital management System (Group Project)"):
+            st.write("This project focuses on devloping of a system which helps to manage patients, an doctors day to day data efficiently")
+            st.write("**Technologies Used:** python and, SQL")
+            st.write("[🔗 GitHub Repo](https://github.com/henryallison/hospital-sys.git)")
+
 
     if project_filter == "All" or project_filter == "Year 3":
-            with st.expander("📊 Crop (Coffee and Maize) Disease Prediction"):
+            with st.expander("📊 Crop (Coffee and Maize) Disease Prediction(Group Project)"):
                     st.write(
                         "This is an AI prediction project developed using Python Flask for prediction and HTML/CSS for the front end. The project predicts crop diseases and recommends appropriate treatments.")
                     st.write("**Technologies Used:** Python, Flask, HTML, CSS")
-            with st.expander("🏥 Hospital Management System"):
+                    st.write("[🔗 GitHub Repo](https://github.com/henryallison/-AI_Group1_ExpertSystem_Assignment2.git)")
+
+            with st.expander("🏥 subscription boxes for pet"):
                     st.write(
-                            "Developed a hospital management system to reduce workload pressure and stress for healthcare providers and patients.")
-                    st.write("**Technologies Used:** Python, SQL")
-                    st.write("[🔗 GitHub Repo](https://github.com/henryallison/crop-disease-prediction)")
-                    st.write("📧 Email: hyallison5050@gmail.com")
-                    st.write("[🔗 LinkedIn](https://www.linkedin.com/in/henry-allison-027545337/)")
+                            "Developed a web base project on with customer can purchase surprise boxes for their pet")
+                    st.write("[🔗 GitHub Repo](https://github.com/henryallison/Subscription-boxes-for-pet.git)")
+
 
     if project_filter == "All" or project_filter == "Dissertation":
             with st.expander("Designing a Basic Encryption System for Secure Health Data Sharing"):
                 st.write("My final year project focuses on developing a light weight encryption system that will be use to keep patient medical records, encrypted at times. Both at rest and in transit ")
                 st.write("**Technologies Used:** Python, SQL")
-                st.write("[🔗 GitHub Repo](https://github.com/henryallison/ai-chatbot)")
-                st.write("📧 Email: hyallison5050@gmail.com")
-                st.write("[🔗 LinkedIn](https://www.linkedin.com/in/henry-allison-027545337/)")
+                st.write("Pending")
+
 
 # Skills section
 elif page == "Skills":
@@ -169,6 +173,9 @@ elif page == "Skills":
     st.write("✔ Completed AI & ML in Crop disease detection Certification")
     st.write("✔ Certified in programing Python ")
 
+if "testimonials" not in st.session_state:
+    st.session_state.testimonials = []
+
 # Testimonials section
 elif page == "Testimonials":
     st.title("🗣️ Student Testimonials")
@@ -184,6 +191,25 @@ elif page == "Testimonials":
 
     st.write("Octave")
     st.write("> Henry’s dedication to learning and improving his skills is inspiring and very motivating.")
+
+    for testimonial in st.session_state.testimonials:
+        st.write(f"**{testimonial['name']}**")
+        st.write(f"> {testimonial['message']}")
+        st.markdown("---")
+
+        # Form to submit new testimonials
+    with st.form("testimonial_form"):
+        name = st.text_input("Your Name")
+        message = st.text_area("Your Testimonial")
+        submitted = st.form_submit_button("Submit Testimonial")
+
+        if submitted:
+            if name and message:  # Ensure both fields are filled
+                # Add the new testimonial to the session state
+                st.session_state.testimonials.append({"name": name, "message": message})
+                st.success("✅ Thank you for your testimonial!")
+            else:
+                st.warning("⚠️ Please fill out both fields.")
 
 # Timeline section
 elif page == "Timeline":
@@ -205,19 +231,42 @@ elif page == "Timeline":
     st.write("📖 Here I manage to create a basic encryption system for protecting medical health records at rest and in transit.")
 
 # Settings section
+# Settings section
 elif page == "Settings":
     st.title("🎨 Customize Your Profile")
 
     st.subheader("Upload a Profile Picture")
     uploaded_image = st.file_uploader("Choose a file", type=["jpg", "png"])
-    if uploaded_image:
+    if uploaded_image is not None:
+        st.session_state.profile_image = uploaded_image
         st.image(uploaded_image, width=150)
 
     st.subheader("✍ Edit Personal Info")
-    new_name = st.text_input("Update Name: ", "Henry Allison")
-    new_location = st.text_input("Update Location: ", "Musanze, Rwanda")
-    new_field = st.text_input("Update Field of Study: ", "Computer Science, SWE")
-    new_university = st.text_input("Update University: ", "INES - Ruhengeri")
+    new_name = st.text_input("Update Name: ", st.session_state.get("name", "Henry Allison"))
+    new_location = st.text_input("Update Location: ", st.session_state.get("location", "Musanze, Rwanda"))
+    new_field = st.text_input("Update Field of Study: ", st.session_state.get("field_of_study", "Computer Science, SWE"))
+    new_university = st.text_input("Update University: ", st.session_state.get("university", "INES - Ruhengeri"))
+
+    st.subheader("✍ Update Bio")
+    new_bio = st.text_area("Update Bio: ", st.session_state.get("bio", (
+        "I'm currently a student at INES Ruhengeri. I am someone who is very hardworking and focused in life. "
+        "I have a very good knowledge when it comes to software engineering. I also have strong programming skills "
+        "in multiple programming languages. I'm a problem solver by default and always follow good software engineering practices."
+    )))
+
+    st.subheader("📄 Upload New CV")
+    new_cv = st.file_uploader("Upload CV (PDF)", type=["pdf"])
+
+    # Save changes
+    if st.button("Save Changes"):
+        st.session_state.name = new_name
+        st.session_state.location = new_location
+        st.session_state.field_of_study = new_field
+        st.session_state.university = new_university
+        st.session_state.bio = new_bio
+        if new_cv is not None:
+            st.session_state.cv = new_cv
+        st.success("✅ Changes saved successfully!")
 
 # Contact section
 elif page == "Contact":
