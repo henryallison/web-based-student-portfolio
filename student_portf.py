@@ -65,7 +65,7 @@ if page == "Home":
         st.image("profile.jpg", width=150, caption="Default image")
 
     # Student details (Editable!)
-    name = st.text_input("Name: ", "Henry Allison")
+    name = st.text_input("Name: ", "Henry Allison.")
     location = st.text_input("Location: ", "Musanze, Rwanda")
     field_of_study = st.text_input("Field of Study: ", "Computer Science, SWE")
     university = st.text_input("University: ", "INES - Ruhengeri")
