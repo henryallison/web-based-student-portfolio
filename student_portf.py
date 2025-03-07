@@ -1,7 +1,46 @@
 import streamlit as st
-
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 # Set page title and icon
 st.set_page_config(page_title="Student Portfolio", page_icon="🎓")
+# Contact section
+
+
+# Email configuration
+SMTP_SERVER = "smtp.gmail.com"  # Gmail SMTP server
+SMTP_PORT = 587  # Gmail SMTP port (for TLS)
+SENDER_EMAIL = "hyallison5050@gmail.com"  # Your Gmail address
+SENDER_PASSWORD = "appw mzjm ohdp ufob"  # Replace with your Gmail app password
+RECIPIENT_EMAIL = "hyallison5050@gmail.com"  # Recipient email address (your email)
+
+# Function to send email
+def send_email(name, email, message):
+    try:
+        # Create the email
+        msg = MIMEMultipart()
+        msg["From"] = SENDER_EMAIL
+        msg["To"] = RECIPIENT_EMAIL
+        msg["Subject"] = f"New Message from {name} via Streamlit App"
+
+        # Email body
+        body = f"""
+        Name: {name}
+        Email: {email}
+        Message: {message}
+        """
+        msg.attach(MIMEText(body, "plain"))
+
+        # Connect to the SMTP server
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()  # Enable TLS encryption
+            server.login(SENDER_EMAIL, SENDER_PASSWORD)  # Log in to the SMTP server
+            server.sendmail(SENDER_EMAIL, RECIPIENT_EMAIL, msg.as_string())  # Send the email
+
+        return True
+    except Exception as e:
+        st.error(f"❌ Error sending email: {e}")
+        return False
 
 # Custom CSS for animations
 st.markdown("""
@@ -231,7 +270,6 @@ elif page == "Timeline":
     st.write("📖 Here I manage to create a basic encryption system for protecting medical health records at rest and in transit.")
 
 # Settings section
-# Settings section
 elif page == "Settings":
     st.title("🎨 Customize Your Profile")
 
@@ -268,6 +306,7 @@ elif page == "Settings":
             st.session_state.cv = new_cv
         st.success("✅ Changes saved successfully!")
 
+
 # Contact section
 elif page == "Contact":
     st.title("📬 Contact Me")
@@ -279,12 +318,15 @@ elif page == "Contact":
 
         submitted = st.form_submit_button("Send Message")
         if submitted:
-            st.success("✅ Message sent successfully")
+            if name and email and message:  # Ensure all fields are filled
+                if send_email(name, email, message):
+                    st.success("✅ Message sent successfully!")
+            else:
+                st.warning("⚠️ Please fill out all fields.")
 
     st.write("📧 Email: hyallison5050@gmail.com")
     st.write("[🔗 LinkedIn](https://www.linkedin.com/in/henry-allison-027545337/)")
     st.write("[📂 GitHub](https://github.com/henryallison)")
-
 
 # Footer
 st.sidebar.write("---")
