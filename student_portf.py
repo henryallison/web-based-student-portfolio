@@ -310,6 +310,7 @@ elif page == "Settings":
 # Contact section
 elif page == "Contact":
     st.title("📬 Contact Me")
+    st.write("Send me a direct message on my Gmail")
 
     with st.form("contact_form"):
         name = st.text_input("Enter your Name")
